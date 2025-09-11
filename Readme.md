@@ -14,6 +14,8 @@ DeployFlow automates a full CI/CD pipeline using:
 - **4 Worker Nodes (2 DEV + 2 TEST)**  
 All connected via SSH key authentication.
 
+---
+
 ## ⚙️ Tools Used
 - Jenkins
 - Ansible
@@ -21,7 +23,7 @@ All connected via SSH key authentication.
 - Prometheus
 - Grafana
 - Node Exporter
-- S3 Bucket with IAM Role
+- S3 Bucket (with IAM Role for access)
 - Amazon Linux (Python pre-installed)
 
 ---
@@ -32,7 +34,7 @@ All connected via SSH key authentication.
 ```bash
 sudo -i
 hostnamectl set-hostname ansible/dev-1/dev-2/test-1/test-2
-passwd root
+passwd root          # Set root password (used later in Ansible credentials)
 vim /etc/ssh/sshd_config
 # PermitRootLogin yes
 # PasswordAuthentication yes
@@ -44,6 +46,7 @@ hostname -i
 ```bash
 yum install ansible -y
 yum install python3 python-pip python-devel -y  # Optional
+
 vim /etc/ansible/hosts
 [dev]
 172.31.20.40
@@ -88,41 +91,56 @@ ansible-playbook tomcat.yml
 
 ## ✅ Jenkins Configuration
 
-### Maven Integration
-- Manage Jenkins → Tools → Maven → Add `maven`
+### 1️⃣ Maven Integration
+- Manage Jenkins → Tools → Maven → Add name `maven`
 
-### S3 Integration
+---
+
+### 2️⃣ S3 Integration
 - Install S3 Publish Plugin
-- Configure IAM Role in System → S3 Profile
+- Configure S3 Profile with your IAM Access Key and Secret Access Key  
+⚠️ **Change this configuration based on your IAM user**  
+Example:
+```
+IAM Access Key: YOUR_ACCESS_KEY
+IAM Secret Key: YOUR_SECRET_KEY
+Profile Name: s3
+```
 
-Sample Upload Snippet:
+Pipeline Upload Snippet Example:
 ```groovy
 s3Upload consoleLogLevel: 'INFO',
   entries: [[
-    bucket: 'your-s3-bucket',
+    bucket: 'your-s3-bucket',       # ⚡ Change to your bucket name
     sourceFile: 'target/NETFLIX-1.2.2.war',
     selectedRegion: 'us-east-1'
   ]],
   profileName: 's3'
 ```
 
-### Ansible Integration
+---
+
+### 3️⃣ Ansible Integration
 - Install Ansible Plugin
 - Configure Ansible Tool → Path: `/usr/bin`
 
-Sample Playbook Step:
+Ansible Playbook Execution Example:
 ```groovy
-ansiblePlaybook credentialsId: 'your-creds-id',
+ansiblePlaybook credentialsId: 'your-creds-id',     # ⚡ Change to your Jenkins Credentials ID
   disableHostKeyChecking: true,
   installation: 'ansible',
   inventory: '/etc/ansible/hosts',
-  limit: '$server',
+  limit: '$server',      # ⚡ Comes from choice parameter (dev/test)
   playbook: '/etc/ansible/deploy.yml'
 ```
 
+⚡ **Important**:  
+Provide correct **Ansible credential username & password (root)** when configuring Jenkins credentials.
+
 ---
 
-## ✅ Declarative Pipeline Sample
+## ✅ Declarative Jenkins Pipeline Sample
+
 ```groovy
 pipeline {
     agent any
@@ -131,6 +149,7 @@ pipeline {
         stage('Code Checkout') {
             steps {
                 git branch: '$branch', url: 'https://github.com/RAHAMSHAIK007/jenkins-java-project.git'
+                # ⚡ Change branch and URL as needed
             }
         }
 
@@ -162,7 +181,7 @@ pipeline {
             steps {
                 s3Upload consoleLogLevel: 'INFO',
                   entries: [[
-                    bucket: 'your-s3-bucket',
+                    bucket: 'your-s3-bucket',  # ⚡ Replace with your own bucket
                     sourceFile: 'target/NETFLIX-1.2.2.war',
                     selectedRegion: 'us-east-1'
                   ]],
@@ -172,7 +191,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                ansiblePlaybook credentialsId: 'your-creds-id',
+                ansiblePlaybook credentialsId: 'your-creds-id',   # ⚡ Replace with your Jenkins credentials ID
                   disableHostKeyChecking: true,
                   installation: 'ansible',
                   inventory: '/etc/ansible/hosts',
@@ -187,34 +206,42 @@ pipeline {
 ---
 
 ## ✅ Example deploy.yml
+
 ```yaml
 - hosts: all
   tasks:
     - name: Copy WAR to Tomcat
       copy:
-        src: /var/lib/jenkins/workspace/pipeline/target/NETFLIX-1.2.2.war
+        src: /var/lib/jenkins/workspace/pipeline/target/NETFLIX-1.2.2.war    # ⚡ Ensure this matches your Jenkins workspace
         dest: /root/tomcat/webapps/
 ```
+
+👉 **Tip**:  
+If deployment fails, verify the `src` path matches your actual Jenkins WAR file location.
 
 ---
 
 ## ✅ Monitoring Setup
 - Prometheus & Grafana installed on Ansible server
 - Node Exporter installed on worker nodes
-- Prometheus configured to monitor all worker nodes
+- Prometheus configured to monitor worker nodes
 
 ---
 
-## ⚡ Notes
-- Ensure correct credentials in Jenkins Tools section.
-- S3 Bucket name must not contain spaces.
-- Configure correct branch & server values.
-- Inventory paths and playbook paths must match.
+## ⚡ Final Notes
+- Replace all placeholders:
+    - IAM Access Key & Secret Access Key
+    - S3 Bucket Name
+    - Ansible Credentials (username: root and password)
+    - Branch Name and GitHub URL
+    - Jenkins Credentials ID
+    - Inventory file paths
+    - WAR file path in deploy.yml
 
 ---
 
 ## 📚 References
-- [Jenkins Documentation](https://www.jenkins.io/doc/)
-- [Ansible Documentation](https://docs.ansible.com/)
-- [Prometheus Documentation](https://prometheus.io/docs/)
-- [Grafana Documentation](https://grafana.com/docs/)
+- [Jenkins Docs](https://www.jenkins.io/doc/)
+- [Ansible Docs](https://docs.ansible.com/)
+- [Prometheus Docs](https://prometheus.io/docs/)
+- [Grafana Docs](https://grafana.com/docs/)
