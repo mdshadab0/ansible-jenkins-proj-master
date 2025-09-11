@@ -14,6 +14,7 @@ Tomcat: The application server for our deployments. 🐱
 
 Prometheus & Grafana: Our monitoring stack, keeping a constant eye on our infrastructure. 👀
 
+
 ✅ Prerequisites
 To replicate this setup, you will need:
 
@@ -22,6 +23,7 @@ To replicate this setup, you will need:
 AWS Access: An IAM role with permissions to manage an S3 bucket. 🔑
 
 SSH Access: Root access to all five servers. 🚪
+
 
 Phase 1: Server and Ansible Setup
 1. Initial Server Configuration
