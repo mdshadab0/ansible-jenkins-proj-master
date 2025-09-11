@@ -26,6 +26,7 @@ SSH Access: Root access to all five servers. 🚪
 
 
 Phase 1: Server and Ansible Setup
+
 1. Initial Server Configuration
 Perform these steps on all five of your servers to set up the hostname and enable SSH root login.
 
