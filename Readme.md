@@ -221,67 +221,38 @@ If deployment fails, verify the `src` path matches your actual Jenkins WAR file 
 
 ---
 
-## ✅ Monitoring Setup
-- Prometheus & Grafana installed on Ansible server
-- Node Exporter installed on worker nodes
-- Prometheus configured to monitor worker nodes
-
-  ## ✅ Phase 3 - Monitoring Setup (Prometheus & Grafana)
+## ✅ Phase 3 - Monitoring Setup (Prometheus & Grafana)
 
 We use `pigeon.sh` (from the `all-setups` repository) to install and configure Prometheus, Grafana, and Node Exporter on all servers.
 
 ### Steps:
 
-1. Make sure `git` is installed on your Ansible server:
+1. Make sure `git` is installed:
 ```bash
 yum install git -y
-Clone the repository containing the monitoring scripts:
+```
 
-bash
-Copy code
+2. Clone the repository containing the monitoring scripts:
+```bash
 git clone https://github.com/RAHAMSHAIK007/all-setups.git
 cd all-setups
-Run the pigeon.sh script on all servers (Ansible server + Worker nodes):
+```
 
-bash
-Copy code
+3. Run the `pigeon.sh` script on all servers (Ansible server + Worker nodes):
+```bash
 # ⚡ Run as root on each server
 bash pigeon.sh
-Verify the installation:
+```
 
-Prometheus should be running on the configured port (default: 9090)
+4. Verify the installation:
+- Prometheus should be running on the configured port (default: 9090)
+- Grafana should be running on the configured port (default: 3000)
+- Node Exporter should be running on worker nodes for metrics collection
 
-Grafana should be running on the configured port (default: 3000)
-
-Node Exporter should be running on worker nodes for metrics collection
-
-Notes for Users:
-⚡ You may need to adjust ports or configuration files inside pigeon.sh based on your environment.
-
-Make sure all servers are reachable from Prometheus for monitoring metrics.
-
-The script installs all necessary dependencies automatically.
-
-yaml
-Copy code
-
----
-
-If you want, I can **integrate this directly into the full `README.md`** we already generated, so that the README will now include **Phase 3: Monitoring** along with Phases 1 and 2, ready for direct download.  
-
-Do you want me to do that?
-
-
-
-
-
-You said:
-give me final reradme
-
-
-ChatGPT said:
-
-
+### Notes for Users:
+- ⚡ You may need to adjust ports or configuration files inside `pigeon.sh` based on your environment.
+- Ensure all servers are reachable from Prometheus for monitoring metrics.
+- The script installs all necessary dependencies automatically.
 
 ---
 
