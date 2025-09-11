@@ -14,7 +14,6 @@ Tomcat: The application server for our deployments. 🐱
 
 Prometheus & Grafana: Our monitoring stack, keeping a constant eye on our infrastructure. 👀
 
-
 ✅ Prerequisites
 To replicate this setup, you will need:
 
@@ -24,9 +23,7 @@ AWS Access: An IAM role with permissions to manage an S3 bucket. 🔑
 
 SSH Access: Root access to all five servers. 🚪
 
-
 Phase 1: Server and Ansible Setup
-
 1. Initial Server Configuration
 Perform these steps on all five of your servers to set up the hostname and enable SSH root login.
 
@@ -137,7 +134,21 @@ pipeline {
                 git branch: '$branch', url: 'https://github.com/YOUR-GITHUB-USERNAME/YOUR-PROJECT-REPO.git'
             }
         }
-        // ... (Build, Test, and Artifact stages are the same)
+        stage('Build') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Artifact') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
         stage('S3 Upload') {
             steps {
                 s3Upload consoleLogLevel: 'INFO', entries: [[bucket: 'your-unique-bucket-name', selectedRegion: 'us-east-1', sourceFile: 'target/YOUR-ARTIFACT-NAME.war']], profileName: 's3'
@@ -152,3 +163,10 @@ pipeline {
 }
 6. Monitoring Setup
 To complete the project, install Node Exporter on all worker nodes. Then, set up Prometheus and Grafana (Docker is recommended). Make sure to update your prometheus.yml file to include the IP addresses of your worker nodes for metrics collection. 📈
+
+
+
+
+
+
+
