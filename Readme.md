@@ -1,5 +1,5 @@
 
-# 🚀 DeployFlow - CI/CD Pipeline Automation
+# 🚀 Automated Multi-Node CI/CD Pipeline for Cloud-Based Application Deployment
 
 ## ✅ Project Overview
 DeployFlow automates a full CI/CD pipeline using:
