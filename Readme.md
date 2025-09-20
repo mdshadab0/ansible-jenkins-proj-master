@@ -148,7 +148,7 @@ pipeline {
     stages {
         stage('Code Checkout') {
             steps {
-                git branch: '$branch', url: 'https://github.com/RAHAMSHAIK007/jenkins-java-project.git'
+                git branch: '$branch', url: 'https://github.com/mdshadab0/ansible-jenkins-proj-master.git'
                 # ⚡ Change branch and URL as needed
             }
         }
