@@ -82,7 +82,7 @@ systemctl daemon-reload
 ### Install Tomcat via Ansible
 ```bash
 yum install git -y
-git clone https://github.com/RAHAMSHAIK007/all-setups.git
+git clone https://github.com/mdshadab0/ansible-jenkins-proj-master.git
 cd all-setups
 ansible-playbook tomcat.yml
 ```
@@ -234,7 +234,7 @@ yum install git -y
 
 2. Clone the repository containing the monitoring scripts:
 ```bash
-git clone https://github.com/RAHAMSHAIK007/all-setups.git
+git clone https://github.com/mdshadab0/ansible-jenkins-proj-master.git
 cd all-setups
 ```
 
