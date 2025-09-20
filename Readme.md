@@ -267,6 +267,7 @@ bash pigeon.sh
     - WAR file path in deploy.yml
 
 ---
+MY linkdin Post About the Project:https://www.linkedin.com/posts/mohammed-shadab-devops_devops-ciabrcd-jenkins-activity-7371845958843834370-S4Tw?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFHuAU4By4SkQJy4jOxidKm0mC1uPF735hg
 
 ## 📚 References
 - [Jenkins Docs](https://www.jenkins.io/doc/)
