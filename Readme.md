@@ -1,6 +1,5 @@
 
-# 🚀 Automated Multi-Node CI/CD Pipeline for Cloud-Based Application Deployment
-
+#  CI/CD Pipeline using Jenkins and Ansible
 ## ✅ Project Overview
 DeployFlow automates a full CI/CD pipeline using:
 - **Jenkins** for Continuous Integration and Delivery
